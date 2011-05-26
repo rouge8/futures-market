@@ -4,10 +4,8 @@ class Market(models.Model):
     question = models.CharField(max_length=500)
     description = models.TextField()
     creation_date = models.DateTimeField('date created')
-    stock_endowment = models.IntegerField() # initial stock endowment for users
-    cash_endowment = models.IntegerField() # initial cash endowment for users
-    total_shares = models.IntegerField() # number_users * endowment
-    
+    cash_endowment = models.IntegerField() # initial cash endowment for users, DLN is not sure what makes sense with this.
+    # might be easier to make "cash" into a particular stock, with known fixed liquidation price == 1??
     market_open = models.BooleanField()
 
 class Stock(models.Model):
@@ -16,6 +14,8 @@ class Stock(models.Model):
     description = models.TextField()
     # max liquidation_price $999999.99. this may be larger than necessary
     liquidation_price = models.DecimalField(max_digits=8, decimal_places=2)
+    total_shares = models.IntegerField() # number_users * endowment
+    stock_endowment = models.IntegerField() # initial stock endowment for users
     
     last_sale_price = models.DecimalField(max_digits=8, decimal_places=2)
     last_sale_time = models.DateTimeField('last sale')
