@@ -1,24 +1,25 @@
 from django.db import models
+from datetime import datetime
 
 class Market(models.Model):
     question = models.CharField(max_length=500)
-    description = models.TextField()
-    creation_date = models.DateTimeField('date created')
-    cash_endowment = models.IntegerField() # initial cash endowment for users, DLN is not sure what makes sense with this.
+    description = models.TextField(blank=True)
+    creation_date = models.DateTimeField('date created',default=datetime.now(),editable=False)
+    cash_endowment = models.DecimalField(max_digits=8, decimal_places=2) # initial cash endowment for users, DLN is not sure what makes sense with this.
     # might be easier to make "cash" into a particular stock, with known fixed liquidation price == 1??
     market_open = models.BooleanField()
 
 class Stock(models.Model):
     market = models.ForeignKey(Market)
     name = models.CharField(max_length=500)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     # max liquidation_price $999999.99. this may be larger than necessary
     liquidation_price = models.DecimalField(max_digits=8, decimal_places=2)
     total_shares = models.IntegerField() # number_users * endowment
     stock_endowment = models.IntegerField() # initial stock endowment for users
     
     last_sale_price = models.DecimalField(max_digits=8, decimal_places=2)
-    last_sale_time = models.DateTimeField('last sale')
+    last_sale_time = models.DateTimeField('last sale time')
 
 class Trader(models.Model):
     market = models.ForeignKey(Market)
@@ -43,10 +44,10 @@ class Order(models.Model):
             ('S', 'Sell'),
         )
     order = models.CharField(max_length=1, choices=ORDER_CHOICES)
-    creation_time = models.DateTimeField()
+    creation_time = models.DateTimeField(default=datetime.now())
     volume = models.IntegerField()
     price = models.DecimalField(max_digits=8, decimal_places=2)
     
     completed = models.BooleanField()
-    completion_time = models.DateTimeField()
+    completion_time = models.DateTimeField(blank=True)
     
