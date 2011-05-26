@@ -21,8 +21,8 @@ class Stock(models.Model):
     total_shares = models.IntegerField() # number_users * endowment
     stock_endowment = models.IntegerField() # initial stock endowment for users
     
-    last_sale_price = models.DecimalField(max_digits=8, decimal_places=2)
-    last_sale_time = models.DateTimeField('last sale time')
+    last_sale_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    last_sale_time = models.DateTimeField('last sale time', null=True, blank=True)
 
     def __unicode__(self):
         return self.name
