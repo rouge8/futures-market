@@ -8,6 +8,9 @@ class Market(models.Model):
     cash_endowment = models.DecimalField(max_digits=8, decimal_places=2) # initial cash endowment for users, DLN is not sure what makes sense with this.
     # might be easier to make "cash" into a particular stock, with known fixed liquidation price == 1??
     market_open = models.BooleanField()
+    
+    class Meta:
+        unique_together=('question',)
 
     def __unicode__(self):
         return self.question
@@ -24,6 +27,9 @@ class Stock(models.Model):
     last_sale_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     last_sale_time = models.DateTimeField('last sale time', null=True, blank=True)
 
+    class Meta:
+        unique_together = ('market', 'name')
+
     def __unicode__(self):
         return self.name
 
@@ -32,6 +38,9 @@ class Trader(models.Model):
     name = models.CharField(max_length=20) # no particular reason
     
     cash = models.DecimalField(max_digits=8, decimal_places=2) # max_digits should be larger?
+
+    class Meta:
+        unique_together = ('market', 'name')
 
     def __unicode__(self):
         return self.name
@@ -43,8 +52,12 @@ class Holding(models.Model):
     
     shares = models.IntegerField()
 
+    class Meta:
+        unique_together = ('market', 'stock', 'trader')
+
     def __unicode__(self):
-        return self.stock
+        output = unicode(self.trader) + ': ' + unicode(self.stock)
+        return output
 
 class Order(models.Model):
     market = models.ForeignKey(Market)
