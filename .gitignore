@@ -1,0 +1,5 @@
+# ignore dln's old code
+dln-stuff
+
+# ignore database during development
+futures-market.db
