@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}{{ trader.name }}'s Portfolio on {{ trader.market.slug }}{% endblock %}
+
+{% block content %}
+<div id="stocks">
+    <p>{{ trader.name }}'s Stocks:</p>
+    {{ trader.stock_set.all }}
+</div>
+{% endblock %}
