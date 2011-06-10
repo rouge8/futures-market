@@ -3,8 +3,43 @@
 {% block title %}{{ trader.name }}'s Portfolio on {{ trader.market.slug }}{% endblock %}
 
 {% block content %}
-<div id="stocks">
-    <p>{{ trader.name }}'s Stocks:</p>
-    {{ trader.stock_set.all }}
+
+<h1>{{ trader.name }} &ndash; {{ trader.market.question }}</h1>
+
+<h2>Stock Prices</h2>
+
+<div class="grids">
+    <div class="grid grid-8" id="graph">
+        <img src="/static/img/photo.jpg" />
+    </div>
+    <div class="grid grid-8" id="stock-prices">
+        <p>Table of latest stock prices goes here</p>
+    </div>
+</div>
+
+<hr />
+
+<h2>{{ trader.name }}'s Portfolio</h2>
+
+<div class="grids">
+    <div class="grid grid-6" id="holdings">
+        <h3>Holdings:</h3>
+        <ul id="holdings">
+            <li>Cash: {{ trader.cash }}</li>
+            {% if trader.holding_set.all %}{% for stock in trader.holding_set.all %}
+            <li>{{ holding.stock }}: {{ holding.shares }} shares</li>
+            {% endfor %}{% endif %}
+    </div>
+
+    <div class="grid grid-5" id="open-orders">
+        <h3>Open Orders:</h3>
+        <ul id="open-orders">
+        </ul>
+    </div>
+    <div class="grid grid-5" id="closed-orders">
+        <h3>Closed Orders:</h3>
+        <ul id="closed-orders">
+        </ul>
+    </div>
 </div>
 {% endblock %}
