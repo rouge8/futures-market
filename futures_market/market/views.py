@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from market.forms import *
 from market.models import *
 from datetime import datetime
+from django.db import transaction
 
 def index(request):
     return render_to_response('market/index.html')
@@ -69,6 +70,7 @@ def resolve_order(order):
             else:
                 o.volume -= volume
                 new = Order(market=order.market, stock=order.stock, trader=order.trader,
+                    order = order.order,
                     creation_time = order.creation_time, price = order.price,
                     volume=volume, completed=True, completion_time=datetime.now())
                 # django has no way to duplicate a model :(
