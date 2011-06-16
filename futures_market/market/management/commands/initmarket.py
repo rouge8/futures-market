@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand, CommandError
-from futures_market.market.models import *
 
 class Command(BaseCommand):
     args = '<market>'

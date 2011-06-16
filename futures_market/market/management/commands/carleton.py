@@ -8,6 +8,7 @@ def create():
     traders = ['dlibenno', 'levinew', 'mtie', 'rugglese', 'maurera', 'altschue', 'balls', 'baquiss', 'bentleye', 'brobecke', 'burghare', 'cantors', 'carterj', 'conwayv', 'draperk', 'ellebrep', 'finen', 'fleishem', 'gibsona', 'gilmoreb', 'goodwinh', 'halla', 'hestr', 'johnsoha', 'jonesm', 'kanazama', 'linderr', 'longd', 'luoh', 'mcphersh', 'miyamotk', 'morseje', 'myersg', 'narveyj', 'obrienk', 'oconnelk', 'ogaraa', 'pernellm', 'pittmanj', 'pricea', 'reardonj', 'robertsk', 'sacksd', 'sapsen', 'schumacm', 'seraydab', 'silbigek', 'sinsheic', 'sjobergj', 'sokl', 'suna', 'thomase', 'wangb', 'wint', 'winere', 'yangj', 'zicafook', 'zimmerm', 'ehrenbed', 'aingc', 'nelsonp']
 
     m = Market(question='Carleton acceptance?', slug='carleton', cash_endowment=100)
+    m.market_open = True
     m.save()
 
     for trader in traders:
