@@ -35,12 +35,24 @@
     <div class="grid grid-5" id="open-orders">
         <h3>Open Orders:</h3>
         <ul id="open-orders">
+            {% if open_orders %}{% for order in open_orders %}
+                <li>{{ order }}</li>
+            {% endfor %}
+            {% else %}
+                <li>No open orders.</li>
+            {% endif %}
         </ul>
     </div>
     <div class="grid grid-5" id="closed-orders">
         <h3>Closed Orders:</h3>
         <ul id="closed-orders">
-        </ul>
+            {% if closed_orders %}{% for oder in closed_orders %}
+                <li>{{ order }}</li>
+            {% endfor %}
+            {% else %}
+                <li>No closed orders.</li>
+            {% endif %}
+            </ul>
     </div>
 </div>
 
@@ -50,6 +62,13 @@
 
 {% if trader.market.market_open %}
 <p>The market is open! Let's act.</p>
+<form method="POST" action="/{{ trader.market.slug }}/{{ trader.name }}/">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="market" value="{{ trader.market.slug }}" />
+    <input type="hidden" name="trader" value="{{ trader }}" />
+    <input type="submit" value="Place order!" />
+</form>
 {% else %}
 <p>No actions available.</p>
 {% endif %}
