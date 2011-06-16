@@ -11,6 +11,7 @@
 <div class="grids">
     <div class="grid grid-8" id="graph">
         <img src="/static/img/photo.jpg" />
+        <caption>This will be a graph.</caption>
     </div>
     <div class="grid grid-8" id="stock-prices">
         <p>Table of latest stock prices goes here</p>
@@ -26,7 +27,7 @@
         <h3>Holdings:</h3>
         <ul id="holdings">
             <li>Cash: {{ trader.cash }}</li>
-            {% if trader.holding_set.all %}{% for stock in trader.holding_set.all %}
+            {% if trader.holding_set.all %}{% for holding in trader.holding_set.all %}
             <li>{{ holding.stock }}: {{ holding.shares }} shares</li>
             {% endfor %}{% endif %}
     </div>
@@ -42,4 +43,15 @@
         </ul>
     </div>
 </div>
+
+<hr />
+
+<h2>Available Actions</h2>
+
+{% if trader.market.market_open %}
+<p>The market is open! Let's act.</p>
+{% else %}
+<p>No actions available.</p>
+{% endif %}
+
 {% endblock %}
