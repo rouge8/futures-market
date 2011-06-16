@@ -22,7 +22,8 @@ class Order(models.Model):
     completion_time = models.DateTimeField(blank=True, null=True)
 
     def __unicode__(self):
-        output = unicode(order) + ': ' + unicode(stock)
+        ### MAKE THIS BETTER
+        return unicode(self.order) + ': ' + unicode(self.stock.name)
 
     class Meta:
         app_label = 'market'
