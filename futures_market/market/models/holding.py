@@ -15,5 +15,5 @@ class Holding(models.Model):
         app_label = 'market'
 
     def __unicode__(self):
-        output = unicode(self.trader) + ': ' + unicode(self.stock)
+        output = unicode(self.trader) + ': ' + unicode(self.stock) + ' ' + unicode(self.shares)
         return output
