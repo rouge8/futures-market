@@ -10,8 +10,8 @@ class Order(models.Model):
     trader = models.ForeignKey(Trader)
     
     ORDER_CHOICES = (
-            ('B', 'Buy'),
-            ('S', 'Sell'),
+            ('B', 'BUY'),
+            ('S', 'SELL'),
         )
     order = models.CharField(max_length=1, choices=ORDER_CHOICES)
     creation_time = models.DateTimeField(default=datetime.now())
@@ -22,8 +22,8 @@ class Order(models.Model):
     completion_time = models.DateTimeField(blank=True, null=True)
 
     def __unicode__(self):
-        ### MAKE THIS BETTER
-        return unicode(self.order) + ': ' + unicode(self.stock.name)
+        output = [self.get_order_display(), unicode(self.volume), 'of', unicode(self.stock.name), 'at', unicode(self.price)]
+        return ' '.join(output)
 
     class Meta:
         app_label = 'market'
