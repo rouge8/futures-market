@@ -28,11 +28,10 @@ def resolve_order(order):
         sorting = ['-price']
     sorting += ['-volume', '-creation_time']
     matches = matches.order_by(*sorting)
-    matches = list(matches)
-    resolved = False
 
-    while not(resolved) and len(matches) > 0 and order.volume > 0:
-        match = matches.pop(0)
+    for match in matches:
+        if order.completed: break
+
         if order.order == 'B':
             price = min(order.price, match.price)
             buyer = order.trader
@@ -44,8 +43,10 @@ def resolve_order(order):
         stock = order.stock
         buyer_holding = buyer.holding_set.get(stock=stock)
         seller_holding = seller.holding_set.get(stock=stock)
-        volume = min(buyer.cash // price, order.volume, seller_holding.shares)
+        volume = min(buyer.cash // price, order.volume, seller_holding.shares, match.volume)
         value = volume * price
+        assert volume >= 0
+        assert price >= 0
 
         # update data
         buyer.cash -= value
@@ -63,24 +64,20 @@ def resolve_order(order):
 
         # update orders
         for o in [order, match]:
-            if o.volume - volume == 0:
-                o.completed = True
-                o.completion_time = datetime.now()
-                resolved = True
-            else:
+            if volume == 0: break
+
+            if o.volume != volume: # order will be split
+                done = Order(market=o.market, stock=o.stock, trader=o.trader,
+                      order=o.order, creation_time=o.creation_time, price=price,
+                      volume=volume, completed=True, completion_time=datetime.now())
+                done.save()
                 o.volume -= volume
-                new = Order(market=order.market, stock=order.stock, trader=order.trader,
-                    order = order.order,
-                    creation_time = order.creation_time, price = order.price,
-                    volume=volume, completed=True, completion_time=datetime.now())
-                # django has no way to duplicate a model :(
-                new.save()
+            else:
+                o.completed = True
+                o.completion_time=datetime.now()
             o.save()
+
     transaction.commit()
-
-
-        
-
 
 def trader(request, market_slug, trader_name):
     m = get_object_or_404(Market, slug=market_slug)
