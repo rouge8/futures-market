@@ -1,10 +1,10 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
+from django.db import transaction
+from datetime import datetime
 from market.forms import *
 from market.models import *
-from datetime import datetime
-from django.db import transaction
 
 def index(request):
     return render_to_response('market/index.html')
@@ -55,6 +55,7 @@ def resolve_order(order):
         stock.last_sale_time = datetime.now()
         buyer_holding.shares += volume
         seller_holding.shares -= volume
+
         # save data
         buyer.save()
         seller.save()
