@@ -13,6 +13,15 @@ def market(request, market_slug):
     m = get_object_or_404(Market, slug=market_slug)
     return render_to_response('market/market.html', {'market': m})
 
+def cancel_order(request):
+    if request.method == 'POST':
+        trader = get_object_or_404(Trader, id=int(request.POST['trader']))
+        order = get_object_or_404(Order, id=int(request.POST['order']))
+        assert order.trader == trader
+
+        order.delete()
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
 @transaction.commit_manually
 def resolve_order(order):
     # find potential orders to resolve

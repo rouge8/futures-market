@@ -36,7 +36,13 @@
         <h3>Open Orders:</h3>
         <ul id="open-orders">
             {% if open_orders %}{% for order in open_orders %}
-                <li>{{ order }}</li>
+                <li>{{ order }}
+                <form action="/cancel/" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="order" value="{{ order.id }}" />
+                    <input type="hidden" name="trader" value="{{ trader.id }}" />
+                    <input type="submit" value="Cancel" />
+                </form></li>
             {% endfor %}
             {% else %}
                 <li>No open orders.</li>
@@ -65,8 +71,6 @@
 <form method="POST" action="/{{ trader.market.slug }}/{{ trader.name }}/">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="hidden" name="market" value="{{ trader.market.slug }}" />
-    <input type="hidden" name="trader" value="{{ trader }}" />
     <input type="submit" value="Place order!" />
 </form>
 {% else %}
