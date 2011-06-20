@@ -4,7 +4,7 @@ from market import Market
 class Stock(models.Model):
     market = models.ForeignKey(Market)
     name = models.CharField(max_length=500)
-    slug = models.CharField(max_length=100)
+    slug = models.CharField(max_length=100) # unique identifier
     description = models.TextField(blank=True)
     # max liquidation_price $999999.99. this may be larger than necessary
     liquidation_price = models.DecimalField(max_digits=8, decimal_places=2)

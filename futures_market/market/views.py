@@ -1,10 +1,11 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.db import transaction
 from datetime import datetime
 from market.forms import *
 from market.models import *
+import simplejson as json
 
 def index(request):
     return render_to_response('market/index.html')
@@ -114,3 +115,26 @@ def trader(request, market_slug, trader_name):
             data = {'trader': t, 'open_orders': open_orders, 'closed_orders': closed_orders, 'form': form} 
 
         return render_to_response('market/trader.html', data, context_instance=RequestContext(request))
+
+def latest_prices(request, market_slug):
+    m = get_object_or_404(Market, slug=market_slug)
+    stocks = Stock.objects.filter(market=m)
+    data = []
+    for stock in stocks:
+        buy, sell = best_price(stock)
+        data.append({'last_sale_price': stock.last_sale_price,
+                'last_sale_time': stock.last_sale_time, 'best_buy': buy,
+                'best_sale': sell, 'name': stock.name})
+    return HttpResponse(json.dumps(data))
+
+def best_price(stock):
+    buy = Order.objects.filter(stock=stock, order='B').order_by('-price')
+    if buy: buy = buy[0]
+    else: buy = None
+
+    sell = Order.objects.filter(stock=stock, order='S').order_by('price')
+    if sell: sell = sell[0]
+    else: sell = None
+
+    return unicode(buy), unicode(sell)
+
