@@ -6,6 +6,7 @@ from datetime import datetime
 from market.forms import *
 from market.models import *
 import json
+from django.core import serializers
 
 def index(request):
     return render_to_response('market/index.html')
@@ -137,4 +138,11 @@ def best_price(stock):
     else: sell = None
 
     return unicode(buy), unicode(sell)
+
+def new_orders(request, market_slug, order_id):
+    m = get_object_or_404(Market, slug=market_slug)
+    orders = Order.objects.filter(market=m, id__gt=order_id, completed=True)
+
+    data = serializers.serialize('json', orders, fields=('stock', 'order', 'price', 'completion_time'))
+    return HttpResponse(data)
 
