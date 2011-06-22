@@ -2,6 +2,16 @@
 
 {% block title %}{{ trader.name }}'s Portfolio on {{ trader.market.slug }}{% endblock %}
 
+{% block page_scripts %}
+<script src="{{ STATIC_PREFIX }}js/update-prices.js"></script>
+<script type="text/javascript">
+    updatePrices('{{ trader.market.slug }}');
+    window.setInterval(function(){
+        updatePrices('{{ trader.market.slug }}');
+    }, 1000);
+</script>
+{% endblock %}
+
 {% block content %}
 
 <h1>{{ trader.name }} &ndash; {{ trader.market.question }}</h1>
@@ -14,7 +24,7 @@
         <caption>This will be a graph.</caption>
     </div>
     <div class="grid grid-8" id="stock-prices">
-        <p>Table of latest stock prices goes here</p>
+        <p id="stock-list">Latest stock prices!</p>
     </div>
 </div>
 
