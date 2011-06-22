@@ -122,17 +122,17 @@ def latest_prices(request, market_slug):
     data = []
     for stock in stocks:
         buy, sell = best_price(stock)
-        data.append({'last_sale_price': stock.last_sale_price,
-                'last_sale_time': stock.last_sale_time, 'best_buy': buy,
+        data.append({'last_sale_price': unicode(stock.last_sale_price),
+                'last_sale_time': unicode(stock.last_sale_time), 'best_buy': buy,
                 'best_sale': sell, 'name': stock.name})
     return HttpResponse(json.dumps(data))
 
 def best_price(stock):
-    buy = Order.objects.filter(stock=stock, order='B').order_by('-price')
+    buy = Order.objects.filter(stock=stock, order='B', completed=False).order_by('-price')
     if buy: buy = buy[0]
     else: buy = None
 
-    sell = Order.objects.filter(stock=stock, order='S').order_by('price')
+    sell = Order.objects.filter(stock=stock, order='S', completed=False).order_by('price')
     if sell: sell = sell[0]
     else: sell = None
 
