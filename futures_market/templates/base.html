@@ -10,14 +10,18 @@
     <link rel="stylesheet" type="text/css" href="{{ STATIC_PREFIX }}css/inuit.css">
     <!--<link rel="stylesheet/less" type="text/css" href="{{ STATIC_PREFIX }}css/styles.less">-->
     <script src="{{ STATIC_PREFIX }}js/less.js"></script>
+    <script src="{{ STATIC_PREFIX }}js/jquery-1.6.1.min.js"></script>
+    {% block page_scripts %}{% endblock %}
 </head>
 
 <body>
     <nav id="nav" class="centred"> 
+    <ul>
         <li><a href="#">Home</a></li> 
         <li><a href="#">About</a></li> 
         <li><a href="#">Clients</a></li> 
         <li><a href="#">Contact Us</a></li>
+    </ul>
     </nav> 
     {% block content %}{% endblock content %}
 
