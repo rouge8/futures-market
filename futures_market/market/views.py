@@ -139,9 +139,9 @@ def best_price(stock):
 
     return unicode(buy), unicode(sell)
 
-def new_orders(request, market_slug, order_id):
+def new_orders(request, market_slug):
     m = get_object_or_404(Market, slug=market_slug)
-    orders = Order.objects.filter(market=m, id__gt=order_id, completed=True)
+    orders = Order.objects.filter(market=m, completed=True)
 
     data = serializers.serialize('json', orders, fields=('stock', 'order', 'price', 'completion_time'))
     return HttpResponse(data)
