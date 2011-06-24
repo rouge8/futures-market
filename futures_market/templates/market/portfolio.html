@@ -1,0 +1,37 @@
+<div class="grid-6" id="holdings">
+    <h3>Holdings:</h3>
+    <ul id="holdings">
+        <li>Cash: {{ trader.cash }}</li>
+        {% if trader.holding_set.all %}{% for holding in trader.holding_set.all %}
+        <li>{{ holding.stock }}: {{ holding.shares }} shares</li>
+        {% endfor %}{% endif %}
+</div>
+
+<div class="grid-5" id="open-orders">
+    <h3>Open Orders:</h3>
+    <ul id="open-orders">
+        {% if open_orders %}{% for order in open_orders %}
+            <li>{{ order }}
+            <form action="/cancel/" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="order" value="{{ order.id }}" />
+                <input type="hidden" name="trader" value="{{ trader.id }}" />
+                <input type="submit" value="Cancel" />
+            </form></li>
+        {% endfor %}
+        {% else %}
+            <li>No open orders.</li>
+        {% endif %}
+    </ul>
+</div>
+<div class="grid-5" id="closed-orders">
+    <h3>Closed Orders:</h3>
+    <ul id="closed-orders">
+        {% if closed_orders %}{% for order in closed_orders %}
+            <li>{{ order }}</li>
+        {% endfor %}
+        {% else %}
+            <li>No closed orders.</li>
+        {% endif %}
+        </ul>
+</div>

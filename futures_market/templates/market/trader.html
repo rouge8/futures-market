@@ -31,7 +31,7 @@
 
 <h2>{{ trader.name }}'s Portfolio</h2>
 
-<div class="grids">
+<div id="portfolio" class="grids">
     <div class="grid-6" id="holdings">
         <h3>Holdings:</h3>
         <ul id="holdings">
@@ -91,6 +91,20 @@
     updateGraph('{{ trader.market.slug }}');
     setInterval(function(){
         updateGraph('{{ trader.market.slug }}');
+    }, 1000);
+</script>
+
+<script type="text/javascript">
+    function updatePortfolio() {
+        $.ajax({
+            url: '{% url market.views.update_portfolio trader.market.slug trader.name %}',
+            success: function(data) {
+                $('#portfolio').html(data);
+            }
+        });
+    };
+    setInterval(function(){
+        updatePortfolio();
     }, 1000);
 </script>
 

@@ -91,6 +91,18 @@ def resolve_order(order):
 
     transaction.commit()
 
+def update_portfolio(request, market_slug, trader_name):
+    m = get_object_or_404(Market, slug=market_slug)
+    t = get_object_or_404(Trader, name=trader_name, market=m)
+    
+    if t:
+        open_orders = Order.objects.filter(market=m, trader=t, completed=False)
+        closed_orders = Order.objects.filter(market=m, trader=t, completed=True)
+        form = OrderForm()
+        data = {'trader': t, 'open_orders': open_orders, 'closed_orders': closed_orders, 'form': form} 
+
+        return render_to_response('market/portfolio.html', data, context_instance=RequestContext(request))
+
 def trader(request, market_slug, trader_name):
     m = get_object_or_404(Market, slug=market_slug)
     t = get_object_or_404(Trader, name=trader_name, market=m)
