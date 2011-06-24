@@ -3,7 +3,7 @@
 {% block title %}{{ trader.name }}'s Portfolio on {{ trader.market.slug }}{% endblock %}
 
 {% block page_scripts %}
-<script src="{{ STATIC_PREFIX }}js/update-prices.js"></script>
+<script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-prices.js"></script>
 <script type="text/javascript">
     updatePrices('{{ trader.market.slug }}');
     window.setInterval(function(){
@@ -20,8 +20,7 @@
 
 <div class="grids">
     <div class="grid grid-8" id="graph">
-        <img src="/static/img/photo.jpg" />
-        <caption>This will be a graph.</caption>
+        <div id="placeholder" style="width:460px;height:300px;"></div>
     </div>
     <div class="grid grid-8" id="stock-prices">
         <p id="stock-list">Latest stock prices!</p>
@@ -86,5 +85,13 @@
 {% else %}
 <p>No actions available.</p>
 {% endif %}
+
+<script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-graph.js"></script>
+<script type="text/javascript">
+    updateGraph('{{ trader.market.slug }}');
+    setInterval(function(){
+        updateGraph('{{ trader.market.slug }}');
+    }, 1000);
+</script>
 
 {% endblock %}

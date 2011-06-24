@@ -5,8 +5,7 @@ from django.db import transaction
 from datetime import datetime
 from market.forms import *
 from market.models import *
-import json
-from django.core import serializers
+import json, calendar
 
 def index(request):
     return render_to_response('market/index.html')
@@ -21,7 +20,8 @@ def cancel_order(request):
         order = get_object_or_404(Order, id=int(request.POST['order']))
         assert order.trader == trader
 
-        order.delete()
+        if order.completed == False: # else bad news...
+            order.delete()
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 @transaction.commit_manually
@@ -141,8 +141,19 @@ def best_price(stock):
 
 def new_orders(request, market_slug):
     m = get_object_or_404(Market, slug=market_slug)
-    orders = Order.objects.filter(market=m, completed=True)
+    stocks = Stock.objects.filter(market=m)
 
-    data = serializers.serialize('json', orders, fields=('stock', 'order', 'price', 'completion_time'))
-    return HttpResponse(data)
+    data = []
+    for stock in stocks:
+        s = {}
+        s['label'] = stock.name
+        o = Order.objects.filter(market=m, stock=stock, completed=True).values_list('completion_time', 'price')
+        orders = []
+        for order in o:
+            orders.append([js_timestamp_from_datetime(order[0]), float(order[1])])
+        s['data'] = orders
+        data.append(s)
+    return HttpResponse(json.dumps(data))
 
+def js_timestamp_from_datetime(dt):
+    return 1000 * calendar.timegm(dt.timetuple())
