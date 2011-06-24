@@ -2,28 +2,20 @@
 {% get_static_prefix as STATIC_PREFIX %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
     <title>{% block title %}DLN's Futures Market{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="{{ STATIC_PREFIX }}css/inuit.css">
-    <!--<link rel="stylesheet/less" type="text/css" href="{{ STATIC_PREFIX }}css/styles.less">-->
+    <link rel="stylesheet/less" type="text/css" href="{{ STATIC_PREFIX }}css/style.css">
     <script src="{{ STATIC_PREFIX }}js/less.js"></script>
     <script src="{{ STATIC_PREFIX }}js/jquery-1.6.1.min.js"></script>
     <script src="{{ STATIC_PREFIX }}js/jquery.flot.js"></script>
     {% block page_scripts %}{% endblock %}
 </head>
 
-<body>
-    <nav id="nav" class="centred"> 
-    <ul>
-        <li><a href="#">Home</a></li> 
-        <li><a href="#">About</a></li> 
-        <li><a href="#">Clients</a></li> 
-        <li><a href="#">Contact Us</a></li>
-    </ul>
-    </nav> 
+<body class="wrapper">
     {% block content %}{% endblock content %}
 
     <hr />
