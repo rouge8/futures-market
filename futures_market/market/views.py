@@ -86,6 +86,7 @@ def resolve_order(order):
                 o.volume -= volume
             else:
                 o.completed = True
+                o.price = price
                 o.completion_time=datetime.now()
             o.save()
 
@@ -118,6 +119,8 @@ def trader(request, market_slug, trader_name):
             resolve_order(order)
 
             return HttpResponseRedirect(request.path)
+        else:
+            pass ## invalid form, how to handle?
 
     else: # normal GET request
         if t:
