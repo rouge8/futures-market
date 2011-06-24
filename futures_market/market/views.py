@@ -123,8 +123,13 @@ def latest_prices(request, market_slug):
     data = []
     for stock in stocks:
         buy, sell = best_price(stock)
-        data.append({'last_sale_price': unicode(stock.last_sale_price),
-            'last_sale_time': stock.last_sale_time.strftime('%d %b %y %H:%M:%S'),
+        if stock.last_sale_time:
+            data.append({'last_sale_price': unicode(stock.last_sale_price),
+                'last_sale_time': stock.last_sale_time.strftime('%d %b %y %H:%M:%S'),
+                'best_buy': buy, 'best_sale': sell, 'name': stock.name})
+        else:
+            data.append({'last_sale_price': unicode(stock.last_sale_price),
+                'last_sale_time': unicode(None),
                 'best_buy': buy, 'best_sale': sell, 'name': stock.name})
     return HttpResponse(json.dumps(data))
 
