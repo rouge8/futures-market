@@ -10,7 +10,7 @@ class StockInline(admin.StackedInline):
     extra = 1
 
 class MarketAdmin(admin.ModelAdmin):
-    fields = ['question', 'slug', 'description', 'cash_endowment', 'market_open']
+    fields = ['question', 'slug', 'cash_endowment', 'market_open']
     readonly_fields = ['creation_date']
     inlines = [StockInline]
 
