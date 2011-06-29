@@ -5,6 +5,7 @@ from trader import Trader
 from datetime import datetime
 
 class Order(models.Model):
+    """Represents an order on the market."""
     market = models.ForeignKey(Market)
     stock = models.ForeignKey(Stock)
     trader = models.ForeignKey(Trader)
