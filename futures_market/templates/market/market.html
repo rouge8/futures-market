@@ -43,7 +43,7 @@
 
         <ul>
         {% for trader in market.trader_set.all %}
-        <li><a href="/{{ market.slug }}/{{ trader.name }}/">{{ trader.name }}'s Portfolio</a></li>
+        <li><a href="{% url market.views.trader market.slug trader.name %}">{{ trader.name }}'s Portfolio</a></li>
         {% endfor %}
         </ul>
     </div>
@@ -55,7 +55,7 @@
     <div class="grid-8">
     <h2>Market Manager</h2>
 
-    <form method="POST" action="/{{ market.slug }}/">
+    <form method="POST" action="{% url market.views.market market.slug %}">
         {% csrf_token %}
         <input type="hidden" name="market" value="{{ market.id }}">
         {% if market.market_open %}
