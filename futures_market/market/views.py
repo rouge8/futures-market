@@ -11,8 +11,31 @@ def index(request):
     return render_to_response('market/index.html')
 
 def market(request, market_slug):
-    m = get_object_or_404(Market, slug=market_slug)
-    return render_to_response('market/market.html', {'market': m})
+    if request.method == 'POST':
+        m = get_object_or_404(Market, slug=market_slug)
+        if request.POST.get('open'):
+            m.market_open = True
+            m.save()
+        elif request.POST.get('liquidate'):
+            m.market_open = False
+            m.save()
+            liquidate(m)
+
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
+    else:
+        m = get_object_or_404(Market, slug=market_slug)
+        return render_to_response('market/market.html', {'market': m}, context_instance=RequestContext(request))
+
+@transaction.commit_manually
+def liquidate(market):
+    holdings = Holding.objects.filter(market=market)
+    for h in holdings:
+        value = h.shares * h.stock.liquidation_price
+        h.trader.cash += value
+        h.trader.save()
+    holdings.delete()
+    transaction.commit()
+
 
 def cancel_order(request):
     if request.method == 'POST':
@@ -116,7 +139,8 @@ def trader(request, market_slug, trader_name):
             order.market = m
             order.trader = t
             order.save()
-            resolve_order(order)
+            if m.market_open:
+                resolve_order(order)
 
             return HttpResponseRedirect(request.path)
         else:

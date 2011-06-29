@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}{{ market.question }}{% endblock %}
+
+{% block page_scripts %}
+<script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-prices.js"></script>
+<script type="text/javascript">
+    updatePrices('{{ market.slug }}');
+    window.setInterval(function(){
+        updatePrices('{{ market.slug }}');
+    }, 1000);
+</script>
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ market.question }}</h1>
+
+<h2>Stock Prices</h2>
+
+<div class="grids">
+    <div class="grid-8" id="graph">
+        <div id="placeholder" style="width:500px;height:300px;"></div>
+    </div>
+    <div class="grid-8" id="stock-prices">
+        <p id="stock-list">Latest stock prices!</p>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-graph.js"></script>
+<script type="text/javascript">
+    updateGraph('{{ market.slug }}');
+    setInterval(function(){
+        updateGraph('{{ market.slug }}');
+    }, 1000);
+</script>
+
+<hr />
+
+<div class="grids">
+    <div class="grid-8">
+        <h2>Trader Portfolios</h2>
+
+        <ul>
+        {% for trader in market.trader_set.all %}
+        <li><a href="/{{ market.slug }}/{{ trader.name }}/">{{ trader.name }}'s Portfolio</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<hr />
+
+<div class="grids">
+    <div class="grid-8">
+    <h2>Market Manager</h2>
+
+    <form method="POST" action="/{{ market.slug }}/">
+        {% csrf_token %}
+        <input type="hidden" name="market" value="{{ market.id }}">
+        {% if market.market_open %}
+            <input type="submit" value="Close &amp; Liquidate" name="liquidate">
+        {% else %}
+            <input type="submit" value="Open" name="open">
+        {% endif %}
+    </form>
+</div>
+</div>
+
+{% endblock %}
