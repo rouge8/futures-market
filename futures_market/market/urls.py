@@ -1,3 +1,6 @@
+"""
+    Maps urls to views in market.views.
+"""
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('market.views',

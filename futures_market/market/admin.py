@@ -1,3 +1,7 @@
+"""
+    Registers database models with the django admin interface.
+"""
+
 from market.models import *
 from django.contrib import admin
 
