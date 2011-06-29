@@ -190,7 +190,10 @@ def best_price(stock):
 
     return unicode(buy), unicode(sell)
 
-def new_orders(request, market_slug):
+def get_orders(request, market_slug):
+    """Returns JSON dictionary of orders on a market. Used to produce
+       graphs."""
+
     m = get_object_or_404(Market, slug=market_slug)
     stocks = Stock.objects.filter(market=m)
 
