@@ -6,7 +6,6 @@ class Stock(models.Model):
     name = models.CharField(max_length=500)
     # max liquidation_price $999999.99. this may be larger than necessary
     liquidation_price = models.DecimalField(max_digits=8, decimal_places=2)
-    total_shares = models.IntegerField() # number_users * endowment
     stock_endowment = models.IntegerField() # initial stock endowment for users
     
     last_sale_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
