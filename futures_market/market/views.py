@@ -29,11 +29,13 @@ def market(request, market_slug):
 @transaction.commit_manually
 def liquidate(market):
     holdings = Holding.objects.filter(market=market)
+    open_orders = Order.objects.filter(market=market,completed=False)
     for h in holdings:
         value = h.shares * h.stock.liquidation_price
         h.trader.cash += value
         h.trader.save()
     holdings.delete()
+    open_orders.delete()
     transaction.commit()
 
 
