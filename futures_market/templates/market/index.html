@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Available Markets{% endblock %}
+
+{% block content %}
+<div class="grids">
+    <div class="grid-8">
+        <h2>Available Markets</h2>
+        <ul>
+            {% for m in markets %}
+            <li><a href="{% url market.views.market m.slug %}">{{ m.question }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

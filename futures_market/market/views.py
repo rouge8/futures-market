@@ -8,7 +8,8 @@ from market.models import *
 import json, calendar
 
 def index(request):
-    return render_to_response('market/index.html')
+    markets = Market.objects.all()
+    return render_to_response('market/index.html', {'markets': markets })
 
 def market(request, market_slug):
     if request.method == 'POST':
