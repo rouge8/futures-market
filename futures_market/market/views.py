@@ -118,15 +118,23 @@ def resolve_order(order):
 
     transaction.commit()
 
+def get_portfolio_data(market, trader):
+    """Returns dictionary of data for a trader view given market and trader.
+       Contains a trader, open and closed orders for that trader, and the
+       order form."""
+    open_orders = Order.objects.filter(market=market, trader=trader, completed=False)
+    closed_orders = Order.objects.filter(market=market, trader=trader, completed=True)
+    form = OrderForm()
+    data = {'trader': trader, 'open_orders': open_orders, 'closed_orders': closed_orders, 'form': form} 
+
+    return data
+
 def update_portfolio(request, market_slug, trader_name):
     m = get_object_or_404(Market, slug=market_slug)
     t = get_object_or_404(Trader, name=trader_name, market=m)
     
     if t:
-        open_orders = Order.objects.filter(market=m, trader=t, completed=False)
-        closed_orders = Order.objects.filter(market=m, trader=t, completed=True)
-        form = OrderForm()
-        data = {'trader': t, 'open_orders': open_orders, 'closed_orders': closed_orders, 'form': form} 
+        data = get_portfolio_data(m, t)
 
         return render_to_response('market/portfolio.html', data, context_instance=RequestContext(request))
 
@@ -151,11 +159,7 @@ def trader(request, market_slug, trader_name):
 
     else: # normal GET request
         if t:
-            open_orders = Order.objects.filter(market=m, trader=t, completed=False)
-            closed_orders = Order.objects.filter(market=m, trader=t, completed=True)
-            form = OrderForm()
-
-            data = {'trader': t, 'open_orders': open_orders, 'closed_orders': closed_orders, 'form': form} 
+            data = get_portfolio_data(m, t)
 
         return render_to_response('market/trader.html', data, context_instance=RequestContext(request))
 
