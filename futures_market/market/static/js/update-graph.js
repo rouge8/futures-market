@@ -7,8 +7,6 @@ function updateGraph(market) {
     var data = [];
     var placeholder = $("#placeholder");
 
-    //$.plot(placeholder, data, options);
-
     function onDataReceived(stocks) {
         // plot each stock
         // we get all the data in one go, if we only got partial data
