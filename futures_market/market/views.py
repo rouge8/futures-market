@@ -8,12 +8,16 @@ from market.models import *
 import json, calendar
 
 def index(request):
+    """Renders an index view listing all of the markets."""
     markets = Market.objects.all()
     return render_to_response('market/index.html', {'markets': markets })
 
 def market(request, market_slug):
+    """Renders and processes the market manager view, allowing opening
+       and liquidating of markets and listing traders."""
+
+    m = get_object_or_404(Market, slug=market_slug)
     if request.method == 'POST':
-        m = get_object_or_404(Market, slug=market_slug)
         if request.POST.get('open'):
             m.market_open = True
             m.save()
@@ -21,14 +25,14 @@ def market(request, market_slug):
             m.market_open = False
             m.save()
             liquidate(m)
-
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
     else:
-        m = get_object_or_404(Market, slug=market_slug)
         return render_to_response('market/market.html', {'market': m}, context_instance=RequestContext(request))
 
 @transaction.commit_manually
 def liquidate(market):
+    """Liquidates the market."""
     holdings = Holding.objects.filter(market=market)
     open_orders = Order.objects.filter(market=market,completed=False)
     for h in holdings:
@@ -41,6 +45,7 @@ def liquidate(market):
 
 
 def cancel_order(request):
+    """Cancels orders."""
     if request.method == 'POST':
         trader = get_object_or_404(Trader, id=int(request.POST['trader']))
         order = get_object_or_404(Order, id=int(request.POST['order']))
@@ -52,9 +57,11 @@ def cancel_order(request):
 
 @transaction.commit_manually
 def resolve_order(order):
+    """Resolves an order."""
     # find potential orders to resolve
     matches = Order.objects.filter(market=order.market,stock=order.stock)
     matches = matches.filter(completed=False).exclude(trader=order.trader)
+
     if order.order == 'B':
         matches = matches.filter(order='S')
         matches = matches.filter(price__lte=order.price)
@@ -63,6 +70,8 @@ def resolve_order(order):
         matches = matches.filter(order='B')
         matches = matches.filter(price__gte=order.price)
         sorting = ['-price']
+    # matches are ordered by highest volume first and creation_time is used
+    # to break ties, with older orders being completed first
     sorting += ['-volume', '-creation_time']
     matches = matches.order_by(*sorting)
 
@@ -77,6 +86,7 @@ def resolve_order(order):
             price = max(order.price, match.price)
             buyer = match.trader
             seller = order.trader
+
         stock = order.stock
         buyer_holding = buyer.holding_set.get(stock=stock)
         seller_holding = seller.holding_set.get(stock=stock)
@@ -130,6 +140,7 @@ def get_portfolio_data(market, trader):
     return data
 
 def update_portfolio(request, market_slug, trader_name):
+    """Updates trader portfolio."""
     m = get_object_or_404(Market, slug=market_slug)
     t = get_object_or_404(Trader, name=trader_name, market=m)
     
@@ -139,6 +150,8 @@ def update_portfolio(request, market_slug, trader_name):
         return render_to_response('market/portfolio.html', data, context_instance=RequestContext(request))
 
 def trader(request, market_slug, trader_name):
+    """Renders trader view and processes orders."""
+    
     m = get_object_or_404(Market, slug=market_slug)
     t = get_object_or_404(Trader, name=trader_name, market=m)
     
@@ -164,6 +177,8 @@ def trader(request, market_slug, trader_name):
         return render_to_response('market/trader.html', data, context_instance=RequestContext(request))
 
 def latest_prices(request, market_slug):
+    """Gets the latest stock prices and returns them as a list of JSON
+       objects."""
     m = get_object_or_404(Market, slug=market_slug)
     stocks = Stock.objects.filter(market=m)
     data = []
