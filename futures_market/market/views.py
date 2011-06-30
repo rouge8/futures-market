@@ -232,6 +232,10 @@ def js_timestamp_from_datetime(dt):
     return 1000 * calendar.timegm(dt.timetuple())
 
 def validate_data(data):
+    """Validates YAML data to make sure it contains all of the information
+       necessary for creating a market."""
+
+    # currently this function just uses lots of asserts and kind of sucks
     question = data.get('question')
     slug = data.get('slug')
     cash_endowment = data.get('cash_endowment')
@@ -254,6 +258,9 @@ def validate_data(data):
 
 @transaction.commit_manually
 def load_data(data):
+    """Creates a new market and associated stocks and traders from
+       uploaded YAML data."""
+
     validate_data(data)
     question = data.get('question')
     slug = data.get('slug')
@@ -308,6 +315,8 @@ def load_data(data):
 
 
 def upload_data(request):
+    """Uploads YAML data to initialize a market."""
+
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -319,6 +328,9 @@ def upload_data(request):
             print form.errors
 
 def export_data(request, market_slug):
+    """Exports data from a market to YAML. Browser treats it as an
+       attachment and will download."""
+
     m = get_object_or_404(Market, slug=market_slug)
     stocks = Stock.objects.filter(market=m)
     traders = Trader.objects.filter(market=m)
