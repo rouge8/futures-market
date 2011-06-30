@@ -172,7 +172,9 @@ def trader(request, market_slug, trader_name):
 
             return HttpResponseRedirect(request.path)
         else:
-            pass ## invalid form, how to handle?
+            data = get_portfolio_data(m, t)
+            data['form'] = form
+            return render_to_response('market/trader.html', data, context_instance=RequestContext(request))
 
     else: # normal GET request
         if t:
