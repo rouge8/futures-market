@@ -318,3 +318,49 @@ def upload_data(request):
         else:
             print form.errors
 
+def export_data(request, market_slug):
+    m = get_object_or_404(Market, slug=market_slug)
+    stocks = Stock.objects.filter(market=m)
+    traders = Trader.objects.filter(market=m)
+    holdings = Holding.objects.filter(market=m)
+    orders = Order.objects.filter(market=m)
+
+    data = defaultdict(list)
+    data['question'] = str(m.question)
+    data['slug'] = str(m.slug)
+    data['cash_endowment'] = float(m.cash_endowment)
+    data['market_open'] = m.market_open
+
+    for s in stocks:
+        stock = {'name': str(s.name), 'liquidation_price': float(s.liquidation_price),
+                'stock_endowment': s.stock_endowment,
+                'last_sale_price': s.last_sale_price,
+                'last_sale_time': s.last_sale_time}
+        if s.last_sale_price:
+            stock['last_sale_price'] = float(s.last_sale_price)
+            
+        data['stocks'].append(stock)
+
+    for t in traders:
+        trader = {'name': str(t.name), 'cash': float(t.cash)}
+        data['traders'].append(trader)
+
+    for h in holdings:
+        holding = {'stock': str(h.stock.name), 'trader': str(h.trader.name),
+                    'shares': h.shares}
+        data['holdings'].append(holding)
+
+    for o in orders:
+        order = {'stock': str(o.stock.name), 'trader': str(o.trader.name),
+                'order': str(o.get_order_display()),
+                'creation_time': o.creation_time, 'volume': o.volume,
+                'price': float(o.price), 'completed': o.completed,
+                'completion_time': o.completion_time}
+        data['orders'].append(order)
+
+    data = dict(data) # PyYAML can't handle defaultdicts well
+
+    response = HttpResponse(yaml.dump(data, default_flow_style=False),
+            mimetype='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename=%s.yaml' %(m.slug)
+    return response
