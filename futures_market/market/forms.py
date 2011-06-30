@@ -1,4 +1,4 @@
-from django.forms import ModelForm, ChoiceField
+from django.forms import ModelForm, ChoiceField, Form, FileField
 from market.models import *
 
 class OrderForm(ModelForm):
@@ -13,3 +13,6 @@ class OrderForm(ModelForm):
     class Meta:
         model = Order
         fields = ('stock', 'order', 'volume', 'price')
+
+class UploadFileForm(Form):
+    file = FileField()

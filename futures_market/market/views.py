@@ -2,15 +2,19 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse
 from django.db import transaction
+from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
+from collections import defaultdict
 from market.forms import *
 from market.models import *
 import json, calendar
+import yaml
 
 def index(request):
     """Renders an index view listing all of the markets."""
     markets = Market.objects.all()
-    return render_to_response('market/index.html', {'markets': markets })
+    form = UploadFileForm()
+    return render_to_response('market/index.html', {'markets': markets, 'form': form}, context_instance=RequestContext(request))
 
 def market(request, market_slug):
     """Renders and processes the market manager view, allowing opening
@@ -226,3 +230,91 @@ def get_orders(request, market_slug):
 
 def js_timestamp_from_datetime(dt):
     return 1000 * calendar.timegm(dt.timetuple())
+
+def validate_data(data):
+    question = data.get('question')
+    slug = data.get('slug')
+    cash_endowment = data.get('cash_endowment')
+    stocks_yaml = data.get('stocks')
+    traders_yaml = data.get('traders')
+    holdings_yaml = data.get('holdings', [])
+    assert question and slug and cash_endowment and stocks_yaml and traders_yaml
+
+    # validate traders
+    for trader in traders_yaml:
+        assert type(trader) == type('') or trader.get('name')
+
+    # validate stocks
+    for stock in stocks_yaml:
+        assert stock.get('name') and stock.get('liquidation_price') and stock.get('stock_endowment')
+
+    # validate holdings
+    for holding in holdings_yaml:
+        assert holding.get('trader') and holding.get('stock') and holding.get('shares')
+
+@transaction.commit_manually
+def load_data(data):
+    validate_data(data)
+    question = data.get('question')
+    slug = data.get('slug')
+    cash_endowment = data.get('cash_endowment')
+    stocks = data.get('stocks')
+    traders = data.get('traders')
+    holdings = data.get('holdings', [])
+
+    m, created = Market.objects.get_or_create(question=question, slug=slug, cash_endowment=cash_endowment, market_open=False)
+    if not(created): assert False # already created = bad news
+    m.save()
+
+    for stock in stocks:
+        name = stock.get('name')
+        lp = stock.get('liquidation_price')
+        se = stock.get('stock_endowment')
+        s = Stock.objects.create(name=name, liquidation_price=lp, stock_endowment=se, market=m)
+        s.save()
+
+    for trader in traders:
+        if type(trader) == type(''):
+            t = Trader.objects.create(name=trader, cash=cash_endowment, market=m)
+        else:
+            name = trader.get('name')
+            cash = trader.get('cash')
+            if not(cash): cash = cash_endowment
+            t = Trader.objects.create(name=name, cash=cash, market=m)
+        t.save()
+
+    for holding in holdings:
+        trader = Trader.objects.get(name=holding['trader'])
+        stock = Stock.objects.get(name=holding['stock'])
+        shares = holding['shares']
+        h = Holding.objects.create(trader=trader, stock=stock, shares=shares, market=m)
+        h.save()
+
+    # create holdings
+    stocks = Stock.objects.filter(market=m)
+    traders = Trader.objects.filter(market=m)
+    for s in stocks:
+        for t in traders:
+            print s, t
+            try:
+                print 'getting...'
+                Holding.objects.get(trader=t, stock=s)
+                print 'got!'
+            except Holding.DoesNotExist:
+                h = Holding.objects.create(market=m, trader=t, stock=s,
+                        shares = s.stock_endowment)
+                h.save()
+    transaction.commit()
+
+
+def upload_data(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            f = request.FILES['file']
+            data = yaml.load(f.read())
+            load_data(data)
+            return HttpResponseRedirect(request.META['HTTP_REFERER'])
+        else:
+            print form.errors
+

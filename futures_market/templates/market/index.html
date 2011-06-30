@@ -8,9 +8,20 @@
         <h2>Available Markets</h2>
         <ul>
             {% for m in markets %}
-            <li><a href="{% url market.views.market m.slug %}">{{ m.question }}</a></li>
+            <li>
+            <a href="{% url market.views.market m.slug %}">{{ m.question }}</a>
+            &mdash; <a href="{% url market.views.export_data m.slug %}">Export!</a>
+            </li>
             {% endfor %}
         </ul>
+    </div>
+    <div class="grid-8">
+        <h2>Upload New Market</h2>
+        <form enctype="multipart/form-data" method="POST" action="{% url market.views.upload_data %}" >
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Upload!" />
+        </form>
     </div>
 </div>
 {% endblock %}
