@@ -201,6 +201,7 @@ def latest_prices(request, market_slug):
     return HttpResponse(json.dumps(data))
 
 def best_price(stock):
+    """Gets best BUY and best SELL order for stock."""
     buy = Order.objects.filter(stock=stock, order='B', completed=False).order_by('-price')
     if buy: buy = buy[0]
     else: buy = None
