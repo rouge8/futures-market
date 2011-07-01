@@ -43,7 +43,13 @@
 <p>The market is open! Let's act.</p>
 <form method="POST" action="{% url market.views.trader trader.market.slug trader.name %}">
     {% csrf_token %}
-    {{ form.as_p }}
+    {% for field in form.visible_fields %}
+        <p>{{ field.label_tag }} {{ field }}<br />
+        {% for error in field.errors %}
+            <strong>{{ error|escape }}</strong>
+        {% endfor %}
+        </p>
+    {% endfor %}
     <input type="submit" value="Place order!" />
 </form>
 {% else %}
