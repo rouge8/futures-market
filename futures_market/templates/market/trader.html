@@ -5,9 +5,18 @@
 {% block page_scripts %}
 <script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-prices.js"></script>
 <script type="text/javascript">
-    updatePrices('{{ trader.market.slug }}');
+    updatePrices('{% url market.views.latest_prices trader.market.slug %}');
     window.setInterval(function(){
-        updatePrices('{{ trader.market.slug }}');
+        updatePrices('{% url market.views.latest_prices trader.market.slug %}');
+    }, 1000);
+</script>
+<script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-graph.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        updateGraph('{% url market.views.get_orders trader.market.slug %}');
+    });
+    setInterval(function(){
+        updateGraph('{% url market.views.get_orders trader.market.slug %}');
     }, 1000);
 </script>
 {% endblock %}
@@ -61,13 +70,6 @@
 <p>No actions available.</p>
 {% endif %}
 
-<script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-graph.js"></script>
-<script type="text/javascript">
-    updateGraph('{{ trader.market.slug }}');
-    setInterval(function(){
-        updateGraph('{{ trader.market.slug }}');
-    }, 1000);
-</script>
 
 <script type="text/javascript">
     function updatePortfolio() {

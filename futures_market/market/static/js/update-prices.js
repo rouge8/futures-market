@@ -1,6 +1,6 @@
-function updatePrices(market) {
+function updatePrices(url) {
     // gets latest prices as JSON data
-    $.getJSON('/prices/' + market + '/', function(data) {
+    $.getJSON(url, function(data) {
         var stocks = [];
 
         // iterates over stocks and assembles them into nicely formatted lists

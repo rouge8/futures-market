@@ -1,4 +1,4 @@
-function updateGraph(market) {
+function updateGraph(url) {
     var options = {
         lines: { show: true },
         points: {show: true },
@@ -24,7 +24,7 @@ function updateGraph(market) {
     }
 
     $.ajax({
-        url: '/orders/' + market + '/',
+        url: url,
         method: 'GET',
         dataType: 'json',
         success: onDataReceived
