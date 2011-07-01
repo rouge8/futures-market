@@ -226,6 +226,8 @@ def get_orders(request, market_slug):
         orders = []
         for order in o:
             orders.append([js_timestamp_from_datetime(order[0]), float(order[1])])
+        # current time and price
+        orders.append([js_timestamp_from_datetime(datetime.now()), float(orders[-1][1])])
         s['data'] = orders
         data.append(s)
     return HttpResponse(json.dumps(data))
