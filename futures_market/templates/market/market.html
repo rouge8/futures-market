@@ -3,13 +3,7 @@
 {% block title %}{{ market.question }}{% endblock %}
 
 {% block page_scripts %}
-<script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-prices.js"></script>
-<script type="text/javascript">
-    updatePrices('{{ market.slug }}');
-    window.setInterval(function(){
-        updatePrices('{{ market.slug }}');
-    }, 1000);
-</script>
+{% include "market/update-prices.html" %}
 {% endblock %}
 
 {% block content %}
@@ -26,14 +20,6 @@
         <p id="stock-list">Latest stock prices!</p>
     </div>
 </div>
-
-<script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-graph.js"></script>
-<script type="text/javascript">
-    updateGraph('{{ market.slug }}');
-    setInterval(function(){
-        updateGraph('{{ market.slug }}');
-    }, 1000);
-</script>
 
 <hr />
 

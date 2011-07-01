@@ -1,0 +1,17 @@
+<script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-prices.js"></script>
+<script type="text/javascript">
+    updatePrices('{% url market.views.latest_prices market.slug %}');
+    window.setInterval(function(){
+        updatePrices('{% url market.views.latest_prices market.slug %}');
+    }, 1000);
+</script>
+
+<script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-graph.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        updateGraph('{% url market.views.get_orders market.slug %}');
+    });
+    setInterval(function(){
+        updateGraph('{% url market.views.get_orders market.slug %}');
+    }, 1000);
+</script>

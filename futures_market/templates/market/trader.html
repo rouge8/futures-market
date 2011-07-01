@@ -3,22 +3,7 @@
 {% block title %}{{ trader.name }}'s Portfolio on {{ trader.market.slug }}{% endblock %}
 
 {% block page_scripts %}
-<script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-prices.js"></script>
-<script type="text/javascript">
-    updatePrices('{% url market.views.latest_prices trader.market.slug %}');
-    window.setInterval(function(){
-        updatePrices('{% url market.views.latest_prices trader.market.slug %}');
-    }, 1000);
-</script>
-<script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-graph.js"></script>
-<script type="text/javascript">
-    $(document).ready(function(){
-        updateGraph('{% url market.views.get_orders trader.market.slug %}');
-    });
-    setInterval(function(){
-        updateGraph('{% url market.views.get_orders trader.market.slug %}');
-    }, 1000);
-</script>
+{% include "market/update-prices.html" %}
 {% endblock %}
 
 {% block content %}
