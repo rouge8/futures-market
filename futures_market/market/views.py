@@ -9,6 +9,7 @@ from market.forms import *
 from market.models import *
 import json, calendar
 import yaml
+from django.contrib.admin.views.decorators import staff_member_required
 
 def index(request):
     """Renders an index view listing all of the markets."""
@@ -16,6 +17,7 @@ def index(request):
     form = UploadFileForm()
     return render_to_response('market/index.html', {'markets': markets, 'form': form}, context_instance=RequestContext(request))
 
+@staff_member_required
 def market(request, market_slug):
     """Renders and processes the market manager view, allowing opening
        and liquidating of markets and listing traders."""
