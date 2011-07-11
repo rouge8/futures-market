@@ -231,8 +231,8 @@ def get_orders(request, market_slug):
         for order in o:
             orders.append([js_timestamp_from_datetime(order[0]), float(order[1])])
         # current time and price
-        if orders:
-            orders.append([js_timestamp_from_datetime(datetime.now()), float(orders[-1][1])])
+        #if orders:
+            #orders.append([js_timestamp_from_datetime(datetime.now()), float(orders[-1][1])])
 
         # add stock to json data
         s['data'] = orders
