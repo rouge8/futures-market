@@ -11,7 +11,7 @@ class Command(BaseCommand):
     def handle(self, addrport='', *args, **options):
         import django
         from django.core.handlers.wsgi import WSGIHandler
-        from tornado import httpserver, wsgi, ioloop
+        from tornado import httpserver, wsgi, ioloop, web
 
 	sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
 	sys.stderr = os.fdopen(sys.stderr.fileno(), 'w', 0)
@@ -36,15 +36,21 @@ class Command(BaseCommand):
 
         def inner_run():
             from django.conf import settings
+            from tornado_static import StaticFileHandler, FallbackHandler
+
             print "Validating models..."
             self.validate(display_num_errors=True)
             print "\nDjango version %s, using settings %r" % (django.get_version(), settings.SETTINGS_MODULE)
             print "Server is running at http://%s:%s/" % (addr, port)
             print "Quit the server with %s." % quit_command
 
-            application = WSGIHandler()
-            container = wsgi.WSGIContainer(application)
-            http_server = httpserver.HTTPServer(container)
+            wsgi_app = wsgi.WSGIContainer(WSGIHandler())
+            application = web.Application([
+                (r"/static/(.*)", StaticFileHandler, {"path": "/home/andy/projects/dln-futures-market/futures_market/market/static"}),
+                (r".*", FallbackHandler, dict(fallback=wsgi_app))
+            ])
+
+            http_server = httpserver.HTTPServer(application)
             http_server.listen(int(port), address=addr)
             ioloop.IOLoop.instance().start()
 
