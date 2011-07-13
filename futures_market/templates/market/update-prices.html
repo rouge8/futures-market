@@ -7,8 +7,12 @@ function updateGraph() {
         points: {show: true },
         xaxis: { mode: "time" } 
     };
+    {% if data %}
     var stocks = {{ data }};
     var stocks = stocks.orders;
+    {% else %}
+    var stocks = [];
+    {% endif %}
     var data = [];
     var placeholder = $("#placeholder");
 
@@ -40,8 +44,12 @@ function updateGraph() {
 function updatePrices() {
     // gets latest prices as JSON data
         var stocks = [];
+        {% if data %}
         var data = {{ data }};
         var data = data.prices;
+        {% else %}
+        var data = [];
+        {% endif %}
 
         // iterates over stocks and assembles them into nicely formatted lists
         $.each(data, function(index, stock) {
