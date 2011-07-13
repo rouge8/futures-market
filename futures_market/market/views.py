@@ -183,6 +183,10 @@ def trader(request, market_slug, trader_name):
         if t:
             data = get_portfolio_data(m, t)
             data['market'] = m
+        d = {}
+        d['prices'] = latest_prices(request, market_slug)
+        d['orders'] = get_orders(request, market_slug)
+        data['data'] = json.dumps(d)
 
         return render_to_response('market/trader.html', data, context_instance=RequestContext(request))
 
@@ -202,7 +206,8 @@ def latest_prices(request, market_slug):
             data.append({'last_sale_price': unicode(stock.last_sale_price),
                 'last_sale_time': unicode(None),
                 'best_buy': buy, 'best_sale': sell, 'name': stock.name})
-    return HttpResponse(json.dumps(data))
+    return data
+    #return HttpResponse(json.dumps(data))
 
 def best_price(stock):
     """Gets best BUY and best SELL order for stock."""
@@ -238,7 +243,16 @@ def get_orders(request, market_slug):
         # add stock to json data
         s['data'] = orders
         data.append(s)
-    return HttpResponse(json.dumps(data))
+    return data
+    #return HttpResponse(json.dumps(data))
+
+def update_market_info(request, market_slug):
+    data = {}
+    data['prices'] = latest_prices(request, market_slug)
+    data['orders'] = get_orders(request, market_slug)
+    data = json.dumps(data)
+
+    return render_to_response('market/update-prices.html', {'data': data})
 
 def js_timestamp_from_datetime(dt):
     return 1000 * calendar.timegm(dt.timetuple())

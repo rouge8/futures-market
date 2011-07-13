@@ -1,17 +1,72 @@
-<script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-prices.js"></script>
+{% autoescape off %}
+
 <script type="text/javascript">
-    updatePrices('{% url market.views.latest_prices market.slug %}');
-    window.setInterval(function(){
-        updatePrices('{% url market.views.latest_prices market.slug %}');
-    }, 1000);
+function updateGraph() {
+    var options = {
+        lines: { show: true },
+        points: {show: true },
+        xaxis: { mode: "time" } 
+    };
+    var stocks = {{ data }};
+    var stocks = stocks.orders;
+    var data = [];
+    var placeholder = $("#placeholder");
+
+        $.each(stocks, function(index, stock) {
+            // add to current data
+
+            if (stock.data.length > 0) {
+                var last_price = stock.data[stock.data.length-1][1];
+                d = new Date();
+                utc = d.getTime();
+                //localOffset = d.getTimezoneOffset() * 60000;
+                //utc = localTime + localOffset;
+                offset = -5;
+                var now = utc + (3600000*offset);
+
+                var current = new Array(now, last_price);
+                stock.data.push(current);
+                //console.log(now);
+                //console.log(last_price);
+                console.log(stock);
+            }
+            data.push(stock);
+
+            // plot!
+            $.plot(placeholder, data, options);
+        });
+};
+
+function updatePrices() {
+    // gets latest prices as JSON data
+        var stocks = [];
+        var data = {{ data }};
+        var data = data.prices;
+
+        // iterates over stocks and assembles them into nicely formatted lists
+        $.each(data, function(index, stock) {
+            stocks.push('<li id="' + stock.name + '">' + stock.name +
+                "'s last price: " + stock.last_sale_price + ' at ' +
+                stock.last_sale_time + ' (best buy offer: ' + stock.best_buy +
+                '; best sell offer: ' + stock.best_sale + ')</li>');
+        });
+
+        // joins all the stock list into an unordered list and replaces the
+        // previous one
+        $('<ul/>', {
+            'id': 'stock-list',
+            html: stocks.join('')
+        }).replaceAll('#stock-list');
+};
+
+updatePrices();
+updateGraph();
 </script>
 
-<script type="text/javascript" src="{{ STATIC_PREFIX }}js/update-graph.js"></script>
-<script type="text/javascript">
-    $(document).ready(function(){
-        updateGraph('{% url market.views.get_orders market.slug %}');
-    });
-    setInterval(function(){
-        updateGraph('{% url market.views.get_orders market.slug %}');
-    }, 1000);
-</script>
+<div class="grid-8" id="graph">
+    <div id="placeholder" style="width:500px;height:300px;"></div>
+</div>
+<div class="grid-8" id="stock-prices">
+    <p id="stock-list">Latest stock prices!</p>
+</div>
+{% endautoescape %}

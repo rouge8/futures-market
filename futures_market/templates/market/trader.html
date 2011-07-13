@@ -2,23 +2,29 @@
 
 {% block title %}{{ trader.name }}'s Portfolio on {{ trader.market.slug }}{% endblock %}
 
-{% block page_scripts %}
-{% include "market/update-prices.html" %}
-{% endblock %}
-
 {% block content %}
 
 <h1>{{ trader.name }} &ndash; {{ trader.market.question }}</h1>
 
 <h2>Stock Prices</h2>
 
-<div class="grids">
-    <div class="grid-8" id="graph">
-        <div id="placeholder" style="width:500px;height:300px;"></div>
-    </div>
-    <div class="grid-8" id="stock-prices">
-        <p id="stock-list">Latest stock prices!</p>
-    </div>
+<script type="text/javascript">
+    function updateInfo() {
+        $.ajax({
+            url: '{% url market.views.update_market_info trader.market.slug %}',
+            success: function(data) {
+                $('#prices').html(data);
+            }
+        });
+    };
+    updateInfo();
+    setInterval(function(){
+        updateInfo();
+    }, 1000);
+</script>
+
+<div id="prices" class="grids">
+    {% include "market/update-prices.html" %}
 </div>
 
 <hr />
