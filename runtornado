@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd futures_market
+python manage.py runtornado 0.0.0.0:8000
