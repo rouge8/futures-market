@@ -15,13 +15,13 @@
             url: '{% url market.views.update_market_info market.slug     %}',
             success: function(data) {
                 $('#prices').html(data);
+            },
+            complete: function() {
+                setTimeout(updateInfo, 1000);
             }
         });
     };
     updateInfo();
-    setInterval(function(){
-        updateInfo();
-    }, 1000);
 </script>
 
 <div id="prices" class="grids">
