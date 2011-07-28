@@ -1,4 +1,4 @@
-from tornado.web import RequestHandler
+from tornado.web import RequestHandler, HTTPError
 import os, datetime, stat, mimetypes, email, time
 
 class StaticFileHandler(RequestHandler):
