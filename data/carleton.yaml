@@ -1,0 +1,25 @@
+question: Carleton acceptance?
+slug: carleton
+cash_endowment: 100
+stocks:
+    - name: ma-accept
+      liquidation_price: 0.71
+      stock_endowment: 100
+    - name: ma-attend
+      liquidation_price: 0.29
+      stock_endowment: 100
+      
+traders: # one way to do lists
+    - name: freelana
+      cash: 50 # overrides the cash endowment for that user
+    - name: dlibenno
+    - kuntza # name attribute isn't necessary unless you're overriding cash
+    - winere
+    - pernellm
+    
+# traders: [{name: freelana, cash: 50}, {name: dlibenno}, kuntza, winere, pernellm] # another way to do lists
+
+holdings: # used to override default stock endowments
+    - trader: dlibenno
+      stock: ma-accept
+      shares: 40
