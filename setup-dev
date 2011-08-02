@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd futures_market
+python2.7 manage.py syncdb
+python2.7 manage.py createcachetable db_cache

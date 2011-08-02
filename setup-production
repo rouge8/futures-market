@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cd futures_market
+python2.7 manage.py collectstatic --settings=futures_market.settings_production
+python2.7 manage.py syncdb --settings=futures_market.settings_production
+python2.7 manage.py createcachetable db_cache --settings=futures_market.settings_production
