@@ -1,0 +1,36 @@
+### Install sqlite
+wget http://www.sqlite.org/sqlite-autoconf-3070701.tar.gz 
+tar zxvf sqlite-autoconf-3070701.tar.gz
+./configure --prefix=/opt
+make
+make install
+
+### Install Python 2.7
+wget http://www.python.org/ftp/python/2.7.2/Python-2.7.2.tgz
+tar zxvf Python-2.7.2.tgz
+./configure --prefix=/opt
+make
+make install
+
+### Install pip
+curl -O http://python-distribute.org/distribute_setup.py
+/opt/bin/python2.7 distribute_setup.py
+curl -O https://raw.github.com/pypa/pip/master/contrib/get-pip.py
+/opt/bin/python2.7 get-pip.py
+
+### install python packages
+/opt/bin/pip install -r LOCATION_OF_REQUIREMENTS.txt
+
+### install pcre (for nginx)
+wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.12.tar.gz
+tar zxvf pcre-8.12.tar.gz
+./configure --prefix=/opt
+make
+make install
+
+### install nginx server
+wget http://nginx.org/download/nginx-1.0.5.tar.gz
+tar zxvf nginx-1.0.5.tar.gz
+./configure --prefix=/opt --with-pcre=../pcre-8.12
+make
+make install
