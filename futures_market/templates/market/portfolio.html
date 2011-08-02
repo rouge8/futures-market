@@ -12,7 +12,7 @@
     <ul id="open-orders">
         {% if open_orders %}{% for order in open_orders %}
             <li>{{ order }}
-            <form action="/cancel/" method="POST">
+            <form action="{% url market.views.cancel_order %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="order" value="{{ order.id }}" />
                 <input type="hidden" name="trader" value="{{ trader.id }}" />
