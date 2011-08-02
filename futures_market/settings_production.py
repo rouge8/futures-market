@@ -14,3 +14,4 @@ DATABASES = {
 }
 
 STATIC_ROOT = '/opt/futures-market/static/'
+URL_PREFIX = "/markets"
