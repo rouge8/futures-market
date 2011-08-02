@@ -14,10 +14,10 @@ The Futures Market can be run with the `runserver-dev` script, which uses Django
 
 ### Usage
 
-- http://hostname/admin/ will bring you to the admin interface where you can edit objects.
-- http://hostname/ will take you to the interface to create markets.
-- http://hostname/marketname/ will take you to the market manager view.
-- http://hostname/marketname/tradername/ will take you to an individual trader portfolio.
+- `http://hostname/admin/` will bring you to the admin interface where you can edit objects.
+- `http://hostname/` will take you to the interface to create markets.
+- `http://hostname/marketname/` will take you to the market manager view.
+- `http://hostname/marketname/tradername/` will take you to an individual trader portfolio.
 
 ## Data
 
@@ -36,6 +36,8 @@ supervisord and nginx can also be configured for multiple processes, with some i
 - Run `setup-production` to setup the database and collect the static files.
 
 - Run `runserver-production` if you want to start the server without supervisord.
+
+The URL prefix in production can be configured in `futures_market/settings_production.py`. This lets you host the market at URLs like `http://hostname/markets/` rather than `http://hostname/`.
 
 ## Internals
 
