@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd "`dirname "$0"`"
+
 cd futures_market
 python2.7 manage.py syncdb
 python2.7 manage.py createcachetable db_cache

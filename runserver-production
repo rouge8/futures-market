@@ -1,4 +1,6 @@
 #!/bin/sh
 
+cd "`dirname "$0"`"
+
 cd futures_market
 python2.7 manage.py runtornado 127.0.0.1:8000 --settings=futures_market.settings_production
