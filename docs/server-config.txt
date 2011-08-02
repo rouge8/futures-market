@@ -34,3 +34,6 @@ tar zxvf nginx-1.0.5.tar.gz
 ./configure --prefix=/opt --with-pcre=../pcre-8.12
 make
 make install
+
+### install supervisord
+pip-2.7 install supervisor
