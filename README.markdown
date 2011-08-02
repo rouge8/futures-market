@@ -10,13 +10,32 @@ The Futures Market requires `Django==1.3`, `tornado==2.0`, and `PyYAML`. These c
 
 ### Running
 
-The Futures Market can be run with the `runtornado` script, which uses Django's management command functionality to run the application on port 8000 with the Tornado server. This is fine for testing purposes, but for production use see **Deployment**.
+The Futures Market can be run with the `runserver-dev` script, which uses Django's management command functionality to run the application on port 8000 with the Tornado server. This is fine for testing purposes, but for production use see **Deployment**. To setup a development database, run the `setup-dev` script.
+
+### Usage
+
+- http://hostname/admin/ will bring you to the admin interface where you can edit objects.
+- http://hostname/ will take you to the interface to create markets.
+- http://hostname/marketname/ will take you to the market manager view.
+- http://hostname/marketname/tradername/ will take you to an individual trader portfolio.
 
 ## Data
 
 Data is stored in an SQLite database called futures-market.db. Once the market is running, [YAML](http://en.wikipedia.org/wiki/YAML)-formatted data can be uploaded. An example can be found in `data/carleton.yaml`.
 
 ## Deployment
+
+For installing all of the server software, see `docs/server-setup.txt`. Copy `conf/nginx-init` to `/etc/init.d/nginx` so that nginx can be managed like a normal service and copy `conf/nginx.conf` to `/opt/conf/nginx.conf`.
+
+In order to manage the market (and any other python script) as a service, copy `conf/supervisord-init` to `/etc/init.d/supervisord` and `conf/supervisord.conf` to `/opt/conf/supervisord.conf`.
+
+Use `chkconfig` to enable supervisord and nginx at various runlevels, and `service` to manually start them. supervisord is managed with `/opt/bin/supervisorctl`. You can read more about [supervisord](http://supervisord.org/) if you're curious.
+
+supervisord and nginx can also be configured for multiple processes, with some information about that at <http://www.hyperionreactor.net/blog/running-tornado-production> and <http://www.tornadoweb.org/documentation/overview.html#running-tornado-in-production>.
+
+- Run `setup-production` to setup the database and collect the static files.
+
+- Run `runserver-production` if you want to start the server without supervisord.
 
 ## Internals
 
