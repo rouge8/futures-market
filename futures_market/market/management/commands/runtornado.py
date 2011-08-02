@@ -45,10 +45,16 @@ class Command(BaseCommand):
             print "Quit the server with %s." % quit_command
 
             wsgi_app = wsgi.WSGIContainer(WSGIHandler())
-            application = web.Application([
-                (r"/static/(.*)", StaticFileHandler, {"path": "/home/andy/projects/dln-futures-market/futures_market/market/static"}),
-                (r".*", FallbackHandler, dict(fallback=wsgi_app))
-            ])
+            if settings.STATIC_ROOT == '':
+		    application = web.Application([
+			(r"/static/(.*)", StaticFileHandler, {"path": "/home/andy/projects/dln-futures-market/futures_market/market/static"}),
+			(r".*", FallbackHandler, dict(fallback=wsgi_app))
+		    ])
+            else:
+		    application = web.Application([
+			(r".*", FallbackHandler, dict(fallback=wsgi_app))
+		    ])
+
 
             http_server = httpserver.HTTPServer(application)
             http_server.listen(int(port), address=addr)
