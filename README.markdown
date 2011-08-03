@@ -31,7 +31,7 @@ nginx can also be configured for multiple processes, with some information about
 
 - Run `setup-production` to setup the database and collect the static files.
 
-- Run `runserver-production` to start the server. `runserver-production` takes an optional port number as an argument and defaults to port 8000.
+- Run `runserver-production` to start the server. `runserver-production` takes an optional port number as an argument and defaults to port 8000. The included nginx.conf is set to listen on ports 8000 and 8001.
 
 The URL prefix in production can be configured in `futures_market/settings_production.py`. This lets you host the market at URLs like `http://hostname/markets/` rather than `http://hostname/`.
 
