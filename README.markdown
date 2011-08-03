@@ -27,11 +27,7 @@ Data is stored in an SQLite database called futures-market.db. Once the market i
 
 For installing all of the server software, see `docs/server-setup.txt`. Copy `conf/nginx-init` to `/etc/init.d/nginx` so that nginx can be managed like a normal service and copy `conf/nginx.conf` to `/opt/conf/nginx.conf`.
 
-In order to manage the market (and any other python script) as a service, copy `conf/supervisord-init` to `/etc/init.d/supervisord` and `conf/supervisord.conf` to `/opt/conf/supervisord.conf`.
-
-Use `chkconfig` to enable supervisord and nginx at various runlevels, and `service` to manually start them. supervisord is managed with `/opt/bin/supervisorctl`. You can read more about [supervisord](http://supervisord.org/) if you're curious.
-
-supervisord and nginx can also be configured for multiple processes, with some information about that at <http://www.hyperionreactor.net/blog/running-tornado-production> and <http://www.tornadoweb.org/documentation/overview.html#running-tornado-in-production>.
+nginx can also be configured for multiple processes, with some information about that at <http://www.hyperionreactor.net/blog/running-tornado-production> and <http://www.tornadoweb.org/documentation/overview.html#running-tornado-in-production>.
 
 - Run `setup-production` to setup the database and collect the static files.
 
