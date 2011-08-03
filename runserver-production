@@ -2,5 +2,12 @@
 
 cd "`dirname "$0"`"
 
+if [ $1 ]; then
+    port=$1
+else
+    port=8000
+fi
+
+
 cd futures_market
-python2.7 manage.py runtornado 127.0.0.1:8000 --settings=futures_market.settings_production
+python2.7 manage.py runtornado 127.0.0.1:$port --settings=futures_market.settings_production
