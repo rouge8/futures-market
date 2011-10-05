@@ -19,9 +19,12 @@ urlpatterns = patterns('',
 
 # Prefix all the above patterns with URL_PREFIX
 # Note: All urls must begin with ^, and URL_PATTERN must begin with /
-if settings.URL_PREFIX:
-    prefixed_urlpattern = []
-    for pat in urlpatterns:
-        pat.regex = re.compile(r"^%s/%s" % (settings.URL_PREFIX[1:], pat.regex.pattern[1:]))
-        prefixed_urlpattern.append(pat)
-    urlpatterns = prefixed_urlpattern
+try:
+    if settings.URL_PREFIX:
+        prefixed_urlpattern = []
+        for pat in urlpatterns:
+            pat.regex = re.compile(r"^%s/%s" % (settings.URL_PREFIX[1:], pat.regex.pattern[1:]))
+            prefixed_urlpattern.append(pat)
+        urlpatterns = prefixed_urlpattern
+except AttributeError as e:
+    pass
