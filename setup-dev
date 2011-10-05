@@ -3,5 +3,12 @@
 cd "`dirname "$0"`"
 
 cd futures_market
-python2.7 manage.py syncdb
-python2.7 manage.py createcachetable db_cache
+
+if [ -e /opt/bin/python2.7 ]; then
+    # on DLN's machine
+    /opt/bin/python2.7 manage.py syncdb
+    /opt/bin/python2.7 manage.py createcachetable db_cache
+else
+    python manage.py syncdb
+    python manage.py createcachetable db_cache
+fi
