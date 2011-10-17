@@ -268,7 +268,7 @@ def validate_data(data):
     stocks_yaml = data.get('stocks')
     traders_yaml = data.get('traders')
     holdings_yaml = data.get('holdings', [])
-    assert question and slug and cash_endowment and stocks_yaml and traders_yaml
+    assert question != None and slug != None and cash_endowment != None and stocks_yaml != None and traders_yaml != None
 
     # validate traders
     for trader in traders_yaml:
@@ -276,11 +276,11 @@ def validate_data(data):
 
     # validate stocks
     for stock in stocks_yaml:
-        assert stock.get('name') and stock.get('liquidation_price') and stock.get('stock_endowment')
+        assert stock.get('name') != None and stock.get('liquidation_price') != None and stock.get('stock_endowment') != None
 
     # validate holdings
     for holding in holdings_yaml:
-        assert holding.get('trader') and holding.get('stock') and holding.get('shares')
+        assert holding.get('trader') != None and holding.get('stock') != None and holding.get('shares') != None
 
 @transaction.commit_manually
 def load_data(data):
