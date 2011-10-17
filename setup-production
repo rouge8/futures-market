@@ -2,7 +2,14 @@
 
 cd "`dirname "$0"`"
 
+if [ -e /opt/bin/python2.7 ]; then
+    # dln's machine
+    PYTHON=/opt/bin/python2.7
+else
+    PYTHON=python2.7
+fi
+
 cd futures_market
-python2.7 manage.py collectstatic --settings=futures_market.settings_production
-python2.7 manage.py syncdb --settings=futures_market.settings_production
-python2.7 manage.py createcachetable db_cache --settings=futures_market.settings_production
+$PYTHON manage.py collectstatic --settings=futures_market.settings_production
+$PYTHON manage.py syncdb --settings=futures_market.settings_production
+$PYTHON manage.py createcachetable db_cache --settings=futures_market.settings_production

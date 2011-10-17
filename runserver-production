@@ -8,6 +8,13 @@ else
     port=8000
 fi
 
+if [ -e /opt/bin/python2.7 ]; then
+    # dln's machine
+    PYTHON=/opt/bin/python2.7
+else
+    PYTHON=python2.7
+fi
+
 
 cd futures_market
-python2.7 manage.py runtornado 127.0.0.1:$port --settings=futures_market.settings_production
+$PYTHON manage.py runtornado 127.0.0.1:$port --settings=futures_market.settings_production
