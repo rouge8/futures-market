@@ -37,7 +37,6 @@ def market(request, market_slug):
         return render_to_response('market/market.html', {'market': m}, context_instance=RequestContext(request))
 
 @transaction.commit_manually
-@staff_member_required
 def liquidate(market):
     """Liquidates the market."""
     holdings = Holding.objects.filter(market=market)
