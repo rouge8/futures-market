@@ -4,8 +4,8 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    #('Andy Freeland', 'freelana@carleton.edu'),
-    #('David Liben-Nowell', 'dlibenno@carleton.edu')
+    ('Andy Freeland', 'freelana@carleton.edu'),
+    ('David Liben-Nowell', 'dlibenno@carleton.edu')
 )
 
 MANAGERS = ADMINS
