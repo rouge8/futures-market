@@ -231,7 +231,7 @@ def get_orders(request, market_slug):
     for stock in stocks:
         s = {}
         s['label'] = stock.name
-        o = Order.objects.filter(market=m, stock=stock, completed=True).values_list('completion_time', 'price')
+        o = Order.objects.filter(market=m, stock=stock, completed=True).values_list('completion_time', 'price').order_by('completion_time')
         orders = []
         for order in o:
             orders.append([js_timestamp_from_datetime(order[0]), float(order[1])])
