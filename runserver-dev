@@ -4,9 +4,9 @@ cd "`dirname "$0"`"
 
 cd futures_market
 
-if [ -e /opt/bin/python2.7 ]; then
+if [ -e /usr/bin/python26 ]; then
     # on DLN's machine
-    /opt/bin/python2.7 manage.py runtornado 127.0.0.1:8000
+    /usr/bin/python26 manage.py runtornado 127.0.0.1:8000
 else
     python manage.py runtornado 0.0.0.0:9000
 fi
