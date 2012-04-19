@@ -25,7 +25,7 @@ Data is stored in an SQLite database called futures-market.db. Once the market i
 
 ## Deployment
 
-For installing all of the server software, see `docs/server-setup.txt`. Copy `conf/nginx-init` to `/etc/init.d/nginx` so that nginx can be managed like a normal service and copy `conf/nginx.conf` to `/opt/conf/nginx.conf`.
+For installing all of the server software, see `docs/server-setup.txt`. Copy `conf/nginx.conf` to `/etc/nginx/nginx.conf`.
 
 nginx can also be configured for multiple processes, with some information about that at <http://www.hyperionreactor.net/blog/running-tornado-production> and <http://www.tornadoweb.org/documentation/overview.html#running-tornado-in-production>.
 

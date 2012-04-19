@@ -2,9 +2,9 @@
 
 cd "`dirname "$0"`"
 
-if [ -e /opt/bin/python2.7 ]; then
+if [ -e /usr/bin/python26 ]; then
     # dln's machine
-    PYTHON=/opt/bin/python2.7
+    PYTHON=/usr/bin/python26
 else
     PYTHON=python2.7
 fi
